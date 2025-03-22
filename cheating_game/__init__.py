@@ -1,5 +1,5 @@
 from otree.api import *
-import time
+from cheating_game.config import Config
 
 doc = """
 Your app description
@@ -9,7 +9,7 @@ Your app description
 class C(BaseConstants):
     NAME_IN_URL = 'cheating_game'
     PLAYERS_PER_GROUP = None
-    NUM_ROUNDS = 2
+    NUM_ROUNDS = 3
 
 
 class Subsession(BaseSubsession):
@@ -25,37 +25,57 @@ class Player(BasePlayer):
 
 
 
-def vars_for_admin_report(subsession):
+def get_count(list_answers):
     from collections import Counter 
 
-    # Counter for each value of the user's input
-    players = [p.input for p in subsession.get_players()]
-    c = len(players)
-    Input = Counter(players)
+    round_c = len(list_answers)
+    round_result = Counter(list_answers)
 
-    # Creating a 
     ratio = [0] * 6
-    label = ['1', '2', '3', '4', '5', '6']
-    for values in Input:
-        ratio[values-1] = Input[values] / c 
+    for values in round_result:
+        ratio[values-1] = round_result[values] / round_c 
 
-    return dict(ratio=ratio, label= label)
+    return ratio
+
+def vars_for_admin_report(subsession):
+
+    vars = {}
+    # Counter for each value of the user's input
+    try: 
+        players = [p.input for p in subsession.get_players()]
+        all_players = [play.input for sess in subsession.in_all_rounds() for play in sess.get_players()]
+        vars = dict(ratio=get_count(players), all_rounds=get_count(all_players)) 
+    except:
+        rat = [0] * 6 
+        vars = dict(ratio=rat, all_rounds=rat)
+
+
+    return vars
 
 
 # PAGES
 class MyPage(Page):
     form_model = 'player'
     form_fields = ['input']
-
+    @staticmethod
+    def vars_for_template(player: Player):
+    
+        return  dict(Config=Config)
 
 class ResultsWaitPage(WaitPage):
     template_name = 'cheating_game/ResultsWaitPage.html'
-
-    # after_all_players_arrive = set_payoffs
-
-
-class Results(Page):
-    pass
+    @staticmethod
+    def vars_for_template(player: Player):
+    
+        return  dict(Config=Config)
 
 
-page_sequence = [MyPage, ResultsWaitPage, Results]
+class Instructions(Page):
+
+    @staticmethod
+    def vars_for_template(player: Player):
+    
+        return  dict(Config=Config)
+
+
+page_sequence = [Instructions, MyPage, ResultsWaitPage]

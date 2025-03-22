@@ -6,6 +6,11 @@
     background: #a2c01b;     
 }
 
+
+.gray {
+    background: #adb5bd ; 
+}
+
 #page2 {
     /* background-color: #a2c01b; */
     display: none;

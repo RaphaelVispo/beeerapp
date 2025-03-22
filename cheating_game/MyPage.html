@@ -2,7 +2,6 @@
 
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap-tour@0.12.0/build/css/bootstrap-tour.min.css" rel="stylesheet">  
     <div class="col px-4 py-2 shadow light-green text-center text-white rounded-4 mx-1">
         <h1 class=" mb-0 font-weight-bold"> Let's Roll the Dice!</h1>
     </div>
@@ -60,76 +59,21 @@
             </div>
         </div>    
 
-        <button class="m-3 btn btn-primary d-grid fixed-bottom btn-lg" >Next</button>
+        <button class="m-3 btn btn-primary d-grid fixed-bottom btn-lg" disabled  id="submit">Next</button>
 
     </div>
-
-
-    <div class="container">
-        <button id="startTourBtn" class="btn btn-primary">Start Tour</button>
-        <h2>Panel Group</h2>
-        <p>The panel-group class clears the bottom-margin. Try to remove the class and see what happens.</p>
-        <div class="panel-group">
-          <div class="panel panel-default" id="panel1">
-            <div class="panel-heading">Panel Header</div>
-            <div class="panel-body">Panel Content</div>
-          </div>
-          <div class="panel panel-default" id="panel2">
-            <div class="panel-heading">Panel Header</div>
-            <div class="panel-body">Panel Content</div>
-          </div>
-          <div class="panel panel-default" id="panel3">
-            <div class="panel-heading">Panel Header</div>
-            <div class="panel-body">Panel Content</div>
-          </div>
-        </div>
-      </div>
-
-    <!-- <script src="jquery.min.js"></script>
-    <script src="bootstrap.min.j    s"></script> -->
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap-tour@0.12.0/build/js/bootstrap-tour.min.js">
     
-
-    </script>
 
     <script>
 
-var tour = new Tour({
-  steps: [
-    {
-      element: "#panel1",
-      title: "1st Panel",
-      content: "This is the first panel",
-      placement: "bottom"
-    },
-    {
-      element: "#panel2",
-      title: "1st Panel",
-      content: "This is the second panel",
-      placement: "bottom"
-    },
-    {
-      element: "#panel3",
-      title: "1st Panel",
-      content: "This is the third panel",
-      placement: "bottom"
-    }
-  ],
-  backdrop: true,
-  storage: false
-});
-
-// tour.init();
-// tour.start();
-tour.init();
-// tour.start();
-$("#startTourBtn").click(function() {
-  tour.restart();
-});
 
 
-        function rollDice() {
+      function verify() {
+        document.getElementById("submit").disabled = false;
+      }
+
+      function rollDice() {
+        verify()
         var elDiceOne       = document.getElementById('dice1');
         var elComeOut       = document.getElementById('roll');  
         var inputReal       = document.getElementById('realvalue')

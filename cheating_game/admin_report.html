@@ -1,8 +1,13 @@
-<p>Here is the sorted list of payoffs in round {{ subsession.round_number }}</p>
+<h4>Here is the Graph in Round {{ subsession.round_number }}</h4>
 
-<!-- <h4> { { subsession.round_number }}</h4> -->
 <div>
-    <canvas id="myChart"></canvas>
+    <canvas id="round"></canvas>
+</div>
+
+<h4> Cummulative Graph of Round 1 to {{ subsession.round_number }} </h4>
+
+<div>
+    <canvas id="all_round"></canvas>
 </div>
 
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
@@ -11,18 +16,58 @@
 <script type="text/javascript">
 
     const ratio = JSON.parse('{{ ratio|json }}');
-    const label = JSON.parse('{{ label|json }}');
+    const all_rounds = JSON.parse('{{ all_rounds|json }}');
+    const label = ['1', '2', '3', '4', '5', '6'];
 
     // console.log(data);  // Check the output in the browser console
 
-    var ctx = document.getElementById('myChart').getContext('2d');
+    var round_ctx = document.getElementById('round').getContext('2d');
+    var all_round_ctx = document.getElementById('all_round').getContext('2d');
 
-    new Chart(ctx, {
+    new Chart(round_ctx, {
         type: 'bar',
         data: {
             labels: label,
             datasets: [{
                 data: ratio,
+                borderWidth: 1
+            }]
+        },
+        options: {
+            scales: {
+                y: {
+                    beginAtZero: true,
+                    max: 1
+                }
+            },
+            plugins: {
+                annotation: {
+                    annotations: {
+                        line: {
+                            type: 'line',
+                            yMin: 1/6, // Line at y = 1/6
+                            yMax: 1/6, // The line should be horizontal
+                            borderColor: 'red', // Line color
+                            borderWidth: 2, // Line width
+                            label: {
+                                content: 'y = 1/6', // Label text
+                                enabled: true,
+                                position: 'right'
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    });
+
+
+    new Chart(all_round_ctx, {
+        type: 'bar',
+        data: {
+            labels: label,
+            datasets: [{
+                data: all_rounds,
                 borderWidth: 1
             }]
         },
