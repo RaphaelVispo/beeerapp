@@ -11,6 +11,14 @@
     background: #adb5bd ; 
 }
 
+.dark-blue {
+    background-color: #2a009c ;
+}
+
+.mustard-yellow { 
+    background: hsl(41, 100%, 51%);
+}
+
 #page2 {
     /* background-color: #a2c01b; */
     display: none;
