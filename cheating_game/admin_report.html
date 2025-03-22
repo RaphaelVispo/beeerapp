@@ -1,0 +1,60 @@
+<p>Here is the sorted list of payoffs in round {{ subsession.round_number }}</p>
+
+<!-- <h4> { { subsession.round_number }}</h4> -->
+<div>
+    <canvas id="myChart"></canvas>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-annotation@3.1.0/dist/chartjs-plugin-annotation.min.js"></script>
+
+<script type="text/javascript">
+
+    const ratio = JSON.parse('{{ ratio|json }}');
+    const label = JSON.parse('{{ label|json }}');
+
+    // console.log(data);  // Check the output in the browser console
+
+    var ctx = document.getElementById('myChart').getContext('2d');
+
+    new Chart(ctx, {
+        type: 'bar',
+        data: {
+            labels: label,
+            datasets: [{
+                data: ratio,
+                borderWidth: 1
+            }]
+        },
+        options: {
+            scales: {
+                y: {
+                    beginAtZero: true,
+                    max: 1
+                }
+            },
+            plugins: {
+                annotation: {
+                    annotations: {
+                        line: {
+                            type: 'line',
+                            yMin: 1/6, // Line at y = 1/6
+                            yMax: 1/6, // The line should be horizontal
+                            borderColor: 'red', // Line color
+                            borderWidth: 2, // Line width
+                            label: {
+                                content: 'y = 1/6', // Label text
+                                enabled: true,
+                                position: 'right'
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    });
+
+ 
+
+ 
+</script>

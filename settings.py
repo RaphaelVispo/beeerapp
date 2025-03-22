@@ -5,15 +5,6 @@ SESSION_CONFIGS = [
     dict(
         name='Cheating_Game' , app_sequence=['cheating_game', 'payment_info'], num_demo_participants=2
     ),
-    dict(
-        name='guess_two_thirds',
-        display_name="Guess 2/3 of the Average",
-        app_sequence=['guess_two_thirds', 'payment_info'],
-        num_demo_participants=3,
-    ),
-    dict(
-        name='survey', app_sequence=['survey', 'payment_info'], num_demo_participants=1
-    ),
 ]
 
 # if you set a property in SESSION_CONFIG_DEFAULTS, it will be inherited by all configs
