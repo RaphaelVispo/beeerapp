@@ -8,8 +8,218 @@
 
 {{ endblock }}
 {{ block content }}
-    <h1> You are the dsd </h1>
-    {{ formfields }}
-    <button class="m-3 btn btn-primary d-grid fixed-bottom btn-lg" id="submit">Next</button>
+
+        <style>
+
+            .wheel{
+                display: flex;
+                justify-content: center;
+                position: relative;
+            }
+            .center-circle{
+                width: 100px;
+                height: 100px;
+                border-radius: 60px;
+                background-color: #fff;
+                position: absolute;
+                top: 50%;
+                transform: translateY(-50%);
+            }
+            .triangle{
+                width: 0; 
+                height: 0; 
+                border-top: 50px solid transparent;
+                border-bottom: 50px solid transparent; 
+                border-right: 50px solid black; 
+                position: absolute;
+                top: 50%;
+                right: -220%;
+                transform: translateY(-50%);
+            }
+            /* #id_isWin, .form-control-errors, .col-form-label,*/
+             #submit{
+                visibility: hidden
+            }
+
+        </style>
+        <div class="container mt-5 ">
+            <div class=" py-5 mx-5" >
+                <div class="d-flex justify-content-center mb-5">
+                    <h1>It will &nbsp;</h1>
+                    <h1 id="winner">None </h1>
+                </div>
+                <div class="wheel">
+                    <canvas class="" id="canvas" width="500" height="500"></canvas>
+                    <div class="center-circle" >
+                        <div class="triangle"></div>
+                    </div>
+                </div>
+                {{ formfields "isWin" }}
+                <div id="click"></div>
+            </div>
+        </div>
+
+
+        <script>
+
+            function toRad(deg){
+                return deg * (Math.PI / 180.0);
+            }
+            function randomRange(min,max){
+                return Math.floor(Math.random() * (max - min + 1)) + min;
+            }
+            function easeOutSine(x) {
+                return Math.sin((x * Math.PI) / 2);
+            }
+            // get percent between 2 number
+            function getPercent(input,min,max){
+                return (((input - min) * 100) / (max - min))/100
+            }
+        </script>
+
+        <script>
+            const canvas = document.getElementById("canvas")
+            const ctx = canvas.getContext("2d")
+            const width = document.getElementById("canvas").width
+            const height = document.getElementById("canvas").height
+
+            const centerX = width/2
+            const centerY = height/2
+            const radius = width/2
+
+            //const maxLoseInput = document.getElementById("maxLose");
+            const maxLoseValue = Math.round( parseFloat(JSON.parse('{{ probability }}'))*100);
+
+            console.log("max int:"+maxLoseValue  )
+            const win       = 100- maxLoseValue 
+
+            let items = [...Array(win).fill('not Rain'), ...Array(maxLoseValue).fill('Rain')];
+
+            
+            // console.log(items)
+            let currentDeg = 0
+            let step = 360/items.length
+            let colors = [
+                ...Array(win).fill({
+                    "r": 1,
+                    "g": 227,
+                    "b": 19,
+                }), ...Array(maxLoseValue).fill({
+                    "r": 237,
+                    "g": 55,
+                    "b": 1,
+                })
+            ]
+        
+            let itemDegs = {}
+
+            draw()
+
+            function draw(){
+                ctx.beginPath();
+                ctx.arc(centerX, centerY, radius, toRad(0), toRad(360))
+                ctx.fillStyle = `rgb(${33},${33},${33})`
+                ctx.lineTo(centerX, centerY);
+                ctx.fill()
+
+                let startDeg = currentDeg;
+                for(let i = 0 ; i < items.length; i++, startDeg += step){
+                    let endDeg = startDeg + step
+                    // console.log(colors)
+                    color = colors[i]
+                    let colorStyle = `rgb(${color.r},${color.g},${color.b})`
+
+                    ctx.beginPath();
+                    rad = toRad(360/step);
+                    ctx.arc(centerX, centerY, radius - 2, toRad(startDeg), toRad(endDeg))
+                    let colorStyle2 = `rgb(${color.r},${color.g},${color.b})`
+                    ctx.fillStyle = colorStyle2
+                    ctx.lineTo(centerX, centerY);
+                    ctx.fill()
+
+    
+                    ctx.save();
+                    ctx.translate(centerX, centerY);
+                    ctx.rotate(toRad((startDeg + endDeg)/2));
+                    ctx.textAlign = "center";
+        
+                    ctx.restore();
+
+                    itemDegs[items[i]] = 
+                        {
+                        "startDeg": startDeg,
+                        "endDeg" : endDeg
+                        }
+                    
+
+                    // check winner
+                    if(startDeg%360 < 360 && startDeg%360 > 270  && endDeg % 360 > 0 && endDeg%360 < 90 ){
+
+                        document.getElementById("winner").innerHTML = items[i]
+                    }
+                }
+            }
+            
+            
+            
+            let speed = 0
+            let maxRotation = randomRange(360* 3, 360 * 6)
+            let pause = false
+            function animate(){
+                if(pause){
+                    return
+                }
+                speed = easeOutSine(getPercent(currentDeg ,maxRotation ,0)) * 20
+                if(speed < 0.01){
+                    speed = 0
+                    pause = true
+                    ifWin = document.getElementById("winner").innerText
+                    var radio1 = document.getElementById("id_isWin-0");
+                    var radio2 = document.getElementById("id_isWin-1");
+
+                    if (document.getElementById("winner").innerText == "not Rain"){
+                        console.log("Winner!")
+                        radio1.checked = true;
+                        radio2.checked = false;
+            
+                    }else {
+                        console.log("Loser!");
+                        radio1.checked = false;
+                        radio2.checked = true;
+                    }
+
+                    document.getElementById("submit").click()
+                }
+                currentDeg += speed
+                draw()
+                window.requestAnimationFrame(animate);
+            }
+            
+            function spin(){
+                if(speed != 0){
+                    return
+                }
+
+                maxRotation = 0;
+                currentDeg = 0
+                draw();
+
+                rotation = randomRange(360 * 10, 360 * 15);
+                
+                
+                maxRotation = rotation - itemDegs['not Rain'].endDeg + 10
+                itemDegs = {}
+                console.log("max",maxRotation)
+                console.log(itemDegs);
+                pause = false
+                window.requestAnimationFrame(animate);
+            } 
+                
+            
+        </script>   
+
+    <button class="m-3 btn light-green d-grid fixed-bottom text-white btn-lg" id="spin_Button" onclick="spin()" >Spin!</button>
+
+    <button id="submit" type="submit">Next</button>
 
 {{ endblock }}
