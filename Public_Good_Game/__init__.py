@@ -79,7 +79,7 @@ class Instructions(Page):
     @staticmethod
     def vars_for_template(player: Player):
         
-        return  dict(Config=Config)
+        return  dict(Config=Config(C.COST, C.PROBABILITY, C.ENDOWMENT))
 
 class ResultsWaitPage(WaitPage):
     template_name = 'cheating_game/ResultsWaitPage.html'
