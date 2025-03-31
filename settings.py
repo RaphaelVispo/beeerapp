@@ -6,7 +6,7 @@ SESSION_CONFIGS = [
         name='Cheating_Game' , 
         app_sequence=['cheating_game', 'payment_info'], 
         num_demo_participants=2,
-
+        number_rounds=3,
     ),
     dict(
         name='Public_Good_Game' , 

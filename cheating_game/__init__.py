@@ -9,7 +9,7 @@ Your app description
 class C(BaseConstants):
     NAME_IN_URL = 'cheating_game'
     PLAYERS_PER_GROUP = None
-    NUM_ROUNDS = 3
+    NUM_ROUNDS = 10
 
 
 class Subsession(BaseSubsession):
@@ -22,8 +22,7 @@ class Group(BaseGroup):
 
 class Player(BasePlayer):
     input = models.IntegerField(label='Enter the result', min=1, max=6)
-
-
+    dice = models.IntegerField(min=1, max=6)
 
 def get_count(list_answers):
     from collections import Counter 
@@ -37,13 +36,15 @@ def get_count(list_answers):
 
     return ratio
 
-def vars_for_admin_report(subsession):
+def vars_for_admin_report(subsession: Subsession):
 
     vars = {}
     # Counter for each value of the user's input
     try: 
         players = [p.input for p in subsession.get_players()]
-        all_players = [play.input for sess in subsession.in_all_rounds() for play in sess.get_players()]
+        print(players)
+        all_players = [play.input for sess in subsession.in_previous_rounds() for play in sess.get_players()]
+        print(all_players)
         vars = dict(ratio=get_count(players), all_rounds=get_count(all_players)) 
     except:
         rat = [0] * 6 
@@ -56,18 +57,16 @@ def vars_for_admin_report(subsession):
 # PAGES
 class MyPage(Page):
     form_model = 'player'
-    form_fields = ['input']
-    @staticmethod
-    def vars_for_template(player: Player):
-    
-        return  dict(Config=Config)
+    form_fields = ['input', 'dice']
 
-class ResultsWaitPage(WaitPage):
-    template_name = 'cheating_game/ResultsWaitPage.html'
     @staticmethod
     def vars_for_template(player: Player):
     
-        return  dict(Config=Config)
+        return  dict(Config=Config, round_number = player.round_number)
+    
+    @staticmethod
+    def is_displayed(player: Player):
+        return player.round_number <= player.session.config['number_rounds']
 
 
 class Instructions(Page):
@@ -77,5 +76,8 @@ class Instructions(Page):
     
         return  dict(Config=Config)
 
+    @staticmethod
+    def is_displayed(player: Player):
+        return player.round_number == 1
 
-page_sequence = [Instructions, MyPage, ResultsWaitPage]
+page_sequence = [Instructions, MyPage]

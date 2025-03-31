@@ -54,9 +54,6 @@ class Config:
 
     script="""
     <script>
-
-
-
       function verify() {
         document.getElementById("submit").disabled = false;
       }
@@ -65,17 +62,17 @@ class Config:
         verify()
         var elDiceOne       = document.getElementById('dice1');
         var elComeOut       = document.getElementById('roll');  
-        var inputReal       = document.getElementById('realvalue')
+        var inputReal       = document.getElementById('id_dice')
 
         var diceOne   =     Math.floor((Math.random() * 6)+ 1);
 
         // correcter values since the cidde show are not correct
         var listOfVal = [1, 5, 6, 3, 4, 2];
 
-        // inputReal.value = listOfVal[diceOne-1];
+        inputReal.value = listOfVal[diceOne-1];
 
         console.log(diceOne + " real");
-        console.log(listOfVal[diceOne-1] + ' howw?');
+        console.log(inputReal.value + ' howw?');
 
         for (var i = 1; i <= 6; i++) {
             elDiceOne.classList.remove('show-' + i);
@@ -85,10 +82,7 @@ class Config:
             }   
         }
 
-
     </script>
-
-
 """
 
     button="Roll Dice!"

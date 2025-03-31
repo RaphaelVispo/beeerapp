@@ -12,12 +12,15 @@
 
     <div class=" vh-100 px-3 ">
 
+        <div class="d-flex justify-content-center shadow mb-3 p-1 text-white bg-dark rounded-4  ">
+            <h4 class="row mb-0 text-end font-weight-bold" >------------ Round {{round_number}} ------------ </h4>
+        </div>
         {{ Config.dice }}
-        
+        <input type="hidden" name="dice" id="id_dice" />
         <div class="d-grid gap-2 col-6 mx-auto p-3 mx-auto ">
             <button type="button" class="btn shadow btn-danger btn-lg mb-3" id="roll_Button"  onclick="rollDice()" >{{ Config.button}}</button>
             <div class="  d-flex col-12 justify-content-center align-items-center">
-                {{ formfields }}
+                {{ formfield 'input' }}
 
             </div>
         </div>    
