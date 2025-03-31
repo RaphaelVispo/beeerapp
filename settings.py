@@ -17,7 +17,12 @@ SESSION_CONFIGS = [
         probability = 99/100
     ),
     dict(
-        name='Common_Pool_Resource' , app_sequence=['Common_Pool_Resource', 'payment_info'], num_demo_participants=2,
+        name='Common_Pool_Resource' , 
+        app_sequence=['Common_Pool_Resource', 'payment_info'], 
+        num_demo_participants=2,
+        threshold = 900, 
+        no_of_fishes = 1000,
+        boat_size = 500
     )
 ]
 
