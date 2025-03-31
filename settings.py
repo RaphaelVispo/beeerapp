@@ -3,10 +3,18 @@ from os import environ
 
 SESSION_CONFIGS = [
     dict(
-        name='Cheating_Game' , app_sequence=['cheating_game', 'payment_info'], num_demo_participants=2,
+        name='Cheating_Game' , 
+        app_sequence=['cheating_game', 'payment_info'], 
+        num_demo_participants=2,
+
     ),
     dict(
-        name='Public_Good_Game' , app_sequence=['Public_Good_Game', 'payment_info'], num_demo_participants=2,
+        name='Public_Good_Game' , 
+        app_sequence=['Public_Good_Game', 'payment_info'], 
+        num_demo_participants=2,
+        endowment=233,
+        cost = 1000,
+        probability = 99/100
     ),
     dict(
         name='Common_Pool_Resource' , app_sequence=['Common_Pool_Resource', 'payment_info'], num_demo_participants=2,

@@ -10,9 +10,6 @@ class C(BaseConstants):
     NAME_IN_URL = 'Public_Good_Game'
     PLAYERS_PER_GROUP = None
     NUM_ROUNDS = 1
-    ENDOWMENT = 1000
-    COST = 1000
-    PROBABILITY = 99/100
     AGENT_ROLE = "Agent"
     PRINCIPAL_ROLE = "Principal"
 
@@ -26,9 +23,14 @@ class Group(BaseGroup):
 
 
 class Player(BasePlayer):
-    contribution = models.IntegerField(label='Enter the amount', min=0, max=C.ENDOWMENT)
+    contribution = models.IntegerField(label='Enter the amount')
     isWin = models.BooleanField()
 
+def contribution_min(player : Player):
+    return 0
+
+def contribution_max(player : Player):
+    return player.session.config['endowment']
 
 
 def get_contributions(subsession : Subsession):
@@ -40,7 +42,7 @@ def get_contributions(subsession : Subsession):
     total_contribution = sum(contributions)
     return dict(
         total=total_contribution,
-        isWin = total_contribution >=  get_constants("Public_Good_Game").COST or is_Win 
+        isWin = total_contribution >=  subsession.session.config['cost'] or is_Win 
     )
 
 def vars_for_admin_report(subsession):
@@ -57,7 +59,7 @@ class SpinWheelPage(Page):
     
     @staticmethod
     def vars_for_template (player):
-        return dict(probability=C.PROBABILITY)
+        return dict(probability=player.session.config['probability'])
 
 class ContributorPage(Page):
     form_model = 'player'
@@ -78,8 +80,7 @@ class Instructions(Page):
 
     @staticmethod
     def vars_for_template(player: Player):
-        
-        return  dict(Config=Config(C.COST, C.PROBABILITY, C.ENDOWMENT))
+        return  dict(Config=Config(player.session.config['cost'], player.session.config['probability'], player.session.config['endowment']))
 
 class ResultsWaitPage(WaitPage):
     template_name = 'cheating_game/ResultsWaitPage.html'
