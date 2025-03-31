@@ -1,0 +1,57 @@
+<h4>Here is the Graph in Round {{ subsession.round_number }}</h4>
+
+<div>
+    <canvas id="round"></canvas>
+</div>
+
+<h4> Cummulative Graph of Round 1 to {{ subsession.round_number }} </h4>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-annotation@3.1.0/dist/chartjs-plugin-annotation.min.js"></script>
+
+<script type="text/javascript">
+
+    const all_rounds = JSON.parse('{{ all_rounds|json }}');
+    const label = JSON.parse('{{ label|json }}');
+
+    // console.log(data);  // Check the output in the browser console
+
+    var round_ctx = document.getElementById('round').getContext('2d');
+
+    new Chart(round_ctx, {
+        type: 'bar',
+        data: {
+            labels: label,
+            datasets: [{
+                data: all_rounds,
+                borderWidth: 1
+            }]
+        },
+        options: {
+            scales: {
+                y: {
+                    beginAtZero: true,
+                }
+            },
+            plugins: {
+                annotation: {
+                    annotations: {
+                        line: {
+                            type: 'line',
+                            yMin:  JSON.parse('{{ threshold }}'), // Line at y = 1/6
+                            yMax: JSON.parse('{{ threshold }}'), // The line should be horizontal
+                            borderColor: 'red', // Line color
+                            borderWidth: 2, // Line width
+                            label: {
+                                content: 'y = {{ threshold }}', // Label text
+                                enabled: true,
+                                position: 'right'
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    });
+
+</script>

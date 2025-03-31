@@ -1,0 +1,19 @@
+#_otree-title{
+    margin:0;
+    padding:0;
+}
+
+.otree-body{
+    margin:0;
+    padding:0;
+}
+.container{
+    padding: 0;
+    margin: 0;
+}
+.card-body{
+    padding: 0;
+}
+#Ins{
+    visibility: hidden;
+}
