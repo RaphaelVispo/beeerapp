@@ -1,11 +1,14 @@
 from otree.api import *
 from otree.common import get_constants
 from Public_Good_Game.config import Config
+from settings import database
 
 
 doc = """
 Your app description
 """
+
+
 class C(BaseConstants):
     NAME_IN_URL = 'Public_Good_Game'
     PLAYERS_PER_GROUP = None
@@ -66,6 +69,13 @@ class ContributorPage(Page):
     form_fields = ['contribution']
 
     @staticmethod
+    def vars_for_template(player):
+        session_config = player.session.config['config']
+        game_config = database.game_config.document(session_config).get().to_dict()
+        print (game_config)
+        return dict(names=game_config)
+    
+    @staticmethod
     def is_displayed(player):
         return player.role != C.AGENT_ROLE
 
@@ -80,7 +90,16 @@ class Instructions(Page):
 
     @staticmethod
     def vars_for_template(player: Player):
-        return  dict(Config=Config(player.session.config['cost'], player.session.config['probability'], player.session.config['endowment']))
+
+        session_config = player.session.config['config']
+        game_config = database.game_config.document(session_config).get().to_dict()
+        print (game_config)
+        # Config(player.session.config['boat_size'], player.session.config['threshold'], get_fishes(player)))
+
+        config = Config(game_config["instruction"]["header"], game_config["instruction"]["steps"])
+        config.format_string( player.session.config['probability'],player.session.config['cost'], player.session.config['endowment'])
+
+        return  dict(Config=config)
 
 class ResultsWaitPage(WaitPage):
     template_name = 'cheating_game/ResultsWaitPage.html'

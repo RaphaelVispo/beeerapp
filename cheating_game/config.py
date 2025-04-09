@@ -1,68 +1,23 @@
+from string import Template
+
 class Config:
+    def __init__(self, header, steps, button, round, dice, script):
+        self.instruction = self.get_Instruction( header, steps)
+        self.button = button
+        self.round = round 
+        self.dice = dice
+        self.script = """
 
-
-    instruction="""
-            <ol>
-                <li>Click the "Roll Dice" button</li>
-                <li>Input the result in the text field</li>
-                <li>Wait for the other players to input</li>
-                <li>Go to the next round or Exit</li>
-            </ol>
-        </div>
-"""
-
-    dice="""
-        <div class="col-12 h-25 d-flex shadow light-blue rounded-4 pb-3 align-items-center  justify-content-center" id="dice">
-            <div id='dice1' class="dice dice-one">
-                <div id="dice-one-side-one" class='side one'>
-                    <div class="dot one-1"></div>
-                </div>
-                <div id="dice-one-side-two" class='side two'>
-                    <div class="dot two-1"></div>
-                    <div class="dot two-2"></div>
-                </div>
-                <div id="dice-one-side-three" class='side three'>
-                    <div class="dot three-1"></div>
-                    <div class="dot three-2"></div>
-                    <div class="dot three-3"></div>
-                </div>
-                <div id="dice-one-side-four" class='side four'>
-                    <div class="dot four-1"></div>
-                    <div class="dot four-2"></div>
-                    <div class="dot four-3"></div>
-                    <div class="dot four-4"></div>
-                </div>
-                <div id="dice-one-side-five" class='side five'>
-                    <div class="dot five-1"></div>
-                    <div class="dot five-2"></div>
-                    <div class="dot five-3"></div>
-                    <div class="dot five-4"></div>
-                    <div class="dot five-5"></div>
-                </div>
-                <div id="dice-one-side-six" class='side six'>
-                    <div class="dot six-1"></div>
-                    <div class="dot six-2"></div>
-                    <div class="dot six-3"></div>
-                    <div class="dot six-4"></div>
-                    <div class="dot six-5"></div>
-                    <div class="dot six-6"></div>
-                </div>
-            </div>
-        </div>
-
-"""
-
-    script="""
-    <script>
-      function verify() {
+<script>
+    function verify() {
         document.getElementById("submit").disabled = false;
-      }
+    }
 
-      function rollDice() {
-        verify()
+    function rollDice() {
+        verify();
         var elDiceOne       = document.getElementById('dice1');
         var elComeOut       = document.getElementById('roll');  
-        var inputReal       = document.getElementById('id_dice')
+        var inputReal       = document.getElementById('id_dice');
 
         var diceOne   =     Math.floor((Math.random() * 6)+ 1);
 
@@ -78,11 +33,24 @@ class Config:
             elDiceOne.classList.remove('show-' + i);
             if (diceOne === i) {
                 elDiceOne.classList.add('show-' + i);   
-                }
-            }   
-        }
+            }
+        }   
+    }
 
-    </script>
+</script>   
 """
 
-    button="Roll Dice!"
+    def get_Instruction(self, header, steps) : 
+        return f"""
+        <div class="card-body lh-lg  ">
+            <p> {header}</p>
+            <ol>
+                {"".join([f"<li>{step}</li>" for step in steps])}
+            </ol>
+        </div>
+"""
+    
+    def format_string(self):
+        print(self.instruction)
+        template = Template(self.instruction)
+        self.instruction  = template.substitute(button=self.button, round=self.round)

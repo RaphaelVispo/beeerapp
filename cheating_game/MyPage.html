@@ -18,8 +18,8 @@
         {{ Config.dice }}
         <input type="hidden" name="dice" id="id_dice" />
         <div class="d-grid gap-2 col-6 mx-auto p-3 mx-auto ">
-            <div class="  d-flex col-12 justify-content-center align-items-center">
-            <button type="button" class="btn shadow btn-danger btn-lg mb-3" id="roll_Button"  onclick="rollDice()" >{{ Config.button}}</button>
+            <div class=" col-12 justify-content-center align-items-center">
+            <button type="button" class="col-12 btn shadow btn-danger btn-lg mb-3" id="roll_Button"  onclick="rollDice()" >{{ Config.button}}</button>
                 {{ formfield 'input' }}
 
             </div>
@@ -28,8 +28,7 @@
         <button class="m-3 btn btn-primary d-grid fixed-bottom btn-lg" disabled  id="submit">Next</button>
 
     </div>
-    
     {{Config.script }}
-
+    
 {{ endblock }}
 

@@ -1,6 +1,8 @@
 from otree.api import *
 from otree.common import get_constants
 from Common_Pool_Resource.config import Config
+from database import *
+from settings import database
 
 doc = """
 Your app description
@@ -38,10 +40,14 @@ class MyPage(Page):
     form_model = 'player'
     form_fields = ['fishes']
 
+
     @staticmethod
     def vars_for_template(player: Player):
-        
+        session_config = player.session.config['config']
+        game_config = database.game_config.document(session_config).get().to_dict()
+
         return  dict(
+            names=game_config,
             fishes= get_fishes(player),
             threshold = player.session.config["threshold"], 
             boat_size = player.session.config["boat_size"],
@@ -117,9 +123,15 @@ class Instructions(Page):
 
     @staticmethod
     def vars_for_template(player: Player):
-        print(get_fishes(player))
-        
-        return  dict(Config=Config(player.session.config['boat_size'], player.session.config['threshold'], get_fishes(player)))
+
+        session_config = player.session.config['config']
+        game_config = database.game_config.document(session_config).get().to_dict()
+        print (game_config)
+        # Config(player.session.config['boat_size'], player.session.config['threshold'], get_fishes(player)))
+
+        config = Config(game_config["instruction"]["header"], game_config["instruction"]["steps"])
+        config.format_string(player.session.config['boat_size'], player.session.config['threshold'], get_fishes(player))
+        return  dict(Config=config)
 
     @staticmethod
     def is_displayed(player):

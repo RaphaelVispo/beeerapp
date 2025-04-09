@@ -1,5 +1,6 @@
 from otree.api import *
 from cheating_game.config import Config
+from settings import database
 
 doc = """
 Your app description
@@ -53,6 +54,19 @@ def vars_for_admin_report(subsession: Subsession):
 
     return vars
 
+def get_config(player: Player):
+    session_config = player.session.config['config']
+    game_config = database.game_config.document(session_config).get().to_dict()
+
+    print(game_config)
+    config = Config(
+        game_config["instruction"]["header"], game_config["instruction"]["steps"], 
+        game_config["button"], player.session.config['number_rounds'],
+        game_config["dice"], game_config["script"] 
+    )
+    config.format_string()
+
+    return config
 
 # PAGES
 class MyPage(Page):
@@ -61,8 +75,8 @@ class MyPage(Page):
 
     @staticmethod
     def vars_for_template(player: Player):
-    
-        return  dict(Config=Config, round_number = player.round_number)
+        config = get_config(player)
+        return  dict(Config=config, round_number = player.round_number)
     
     @staticmethod
     def is_displayed(player: Player):
@@ -73,8 +87,9 @@ class Instructions(Page):
 
     @staticmethod
     def vars_for_template(player: Player):
-    
-        return  dict(Config=Config)
+        config = get_config(player)
+
+        return  dict(Config=config)
 
     @staticmethod
     def is_displayed(player: Player):

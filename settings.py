@@ -1,5 +1,7 @@
 from os import environ
+from database import *
 
+database = Database()
 
 SESSION_CONFIGS = [
     dict(
@@ -7,6 +9,7 @@ SESSION_CONFIGS = [
         app_sequence=['cheating_game', 'payment_info'], 
         num_demo_participants=2,
         number_rounds=3,
+        config = "c706227c-9934-4c43-aaa9-424d3057b9c3",
     ),
     dict(
         name='Public_Good_Game' , 
@@ -14,7 +17,8 @@ SESSION_CONFIGS = [
         num_demo_participants=2,
         endowment=233,
         cost = 1000,
-        probability = 99/100
+        probability = 99/100,
+        config = "451692e8-ee33-40a7-88ed-0d2e41748371"
     ),
     dict(
         name='Common_Pool_Resource' , 
@@ -22,7 +26,8 @@ SESSION_CONFIGS = [
         num_demo_participants=2,
         threshold = 900, 
         no_of_fishes = 1000,
-        boat_size = 500
+        boat_size = 500,
+        config = "c142d277-57ef-4e3f-b15f-1445efb4d025"
     )
 ]
 
